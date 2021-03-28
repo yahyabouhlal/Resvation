@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using ReserveStudent.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ReserveStudent.Controllers
 {
@@ -23,7 +24,7 @@ namespace ReserveStudent.Controllers
             _ReservationTyperepo = ReservationTyperepo;
             _userManger = userManager;
         }
-
+        [Authorize(Roles = "Admin")]
     // GET: ReservationController
     public ActionResult Index()
         {
@@ -31,7 +32,7 @@ namespace ReserveStudent.Controllers
             return View(reservations);
            
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: ReservationController/Details/5
         public ActionResult Review(int id)
         {
@@ -48,7 +49,7 @@ namespace ReserveStudent.Controllers
             };
             return View(model);
         }
-
+        [Authorize(Roles = "Admin")]
         public ActionResult ApprouveRequest(int id)
         {
             try
@@ -67,7 +68,7 @@ namespace ReserveStudent.Controllers
                 return RedirectToAction("Index");
             }
         }
-
+        [Authorize(Roles = "Admin")]
         public ActionResult RejectRequest(int id)
         {
             try
@@ -145,7 +146,7 @@ namespace ReserveStudent.Controllers
                     ModelState.AddModelError("", "Something went wrong in the submit action");
                     return View(model);
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(StudentReservations));
             }
             catch (Exception)
             {
@@ -177,7 +178,14 @@ namespace ReserveStudent.Controllers
         // GET: ReservationController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var reservation = _repos.GetById(id);
+            var isSuccuss = _repos.Delete(reservation);
+            if (!isSuccuss)
+            {
+
+                return View();
+            }
+            return RedirectToAction(nameof(StudentReservations));
         }
 
         // POST: ReservationController/Delete/5
@@ -193,6 +201,14 @@ namespace ReserveStudent.Controllers
             {
                 return View();
             }
+        }
+        public ActionResult StudentReservations()
+        {
+            var user = _userManger.GetUserAsync(User).Result;
+
+            var Reservations = _repos.GetReservationsByStudent(user.Id);
+
+            return View(Reservations);
         }
     }
 }
