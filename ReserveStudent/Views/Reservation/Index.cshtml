@@ -1,20 +1,14 @@
 ﻿@model IEnumerable<ReserveStudent.Models.Reservation>
 
-@{
-    ViewData["Title"] = "Index";
-}
+@{ ViewData["Title"] = "Index"; }
 
 <h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
+
+<table class="table " id="myTable">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
+
             <th>
                 @Html.DisplayNameFor(model => model.RequestingStudent.FirstName)
             </th>
@@ -34,32 +28,49 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RequestingStudent.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RequestingStudent.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReservationType.NameType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.ActionLink("Review", "Review", new {  id=item.Id  }) |
-              
-             
-            </td>
-        </tr>
+        @foreach (var item in Model)
+        {
+<tr>
+
+    <td>
+        @Html.DisplayFor(modelItem => item.RequestingStudent.FirstName)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.RequestingStudent.LastName)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Date)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.ReservationType.NameType)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Status)
+    </td>
+    <td>
+        @Html.ActionLink("Review", "Review", new { id = item.Id }) |
+
+
+    </td>
+</tr>
 }
     </tbody>
 </table>
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                //"searching": false,   // Search Box will Be Disabled
+
+                "ordering": false,    // Ordering (Sorting on Each Column)will Be Disabled
+
+                "info": false,         // Will show "1 to n of n entries" Text at bottom
+
+                //"lengthChange": false // Will Disabled Record number per page
+
+                //"dom": '<"top"iflp<"clear">>rt<"bottom"iflp<"clear">>'
+            });
+        });
+    </script>
+}
+
