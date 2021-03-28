@@ -45,6 +45,12 @@ namespace ReserveStudent.Models.Repositories
             return reservation;
         }
 
+        public List<Reservation> GetReservationsByStudent(string id)
+        {
+            return GetAll()
+               .Where(q => q.RequestingStudentId == id).ToList();
+        }
+
         public bool IsExist(int id)
         {
             var exists = _db.Reservations.Any(x => x.Id == id);
