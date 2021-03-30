@@ -28,9 +28,11 @@ namespace ReserveStudent.Controllers
     // GET: ReservationController
     public ActionResult Index()
         {
-            var reservations = _repos.GetAll().OrderBy(x=>x.RequestingStudent.Count);
+            var today = DateTime.Today;
+            var reservations = _repos.GetAll().OrderBy(x=>x.RequestingStudent.Count).Where(x => x.Date == today);
             return View(reservations);
-           
+            
+
         }
         [Authorize(Roles = "Admin")]
         // GET: ReservationController/Details/5
